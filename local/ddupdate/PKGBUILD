@@ -1,0 +1,26 @@
+pkgname=ddupdate
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Dynamic DNS client for VALUE DOMAIN'
+arch=('any')
+url='http://www.hacklab.jp'
+license=('MIT')
+depends=(
+    'php'
+)
+source=('https://github.com/kazookie/ddupdate.git')
+md5sums=(
+    'SKIP'
+)
+
+package() {
+    cd "${srcdir}/ddupdate/bin"
+    install -Dm755 "${pkgname}.php" "${pkgdir}/usr/local/bin/${pkgname}"
+	
+	cd "${srcdir}/ddupdate/conf"
+    install -Dm644 "${pkgname}.json" "${pkgdir}/etc/${pkgname}.json"
+
+    cd "${srcdir}/ddupdate/services"
+    install -Dm644 "${pkgname}.service" "${pkgdir}/etc/systemd/system/${pkgname}.service"
+    install -Dm644 "${pkgname}.timer" "${pkgdir}/etc/systemd/system/${pkgname}.timer"
+}
