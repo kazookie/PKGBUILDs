@@ -1,0 +1,42 @@
+pkgname=softether
+pkgver=5.02.5180
+pkgrel=1
+pkgdesc="Multi-protocol VPN Program from University of Tsukuba"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="https://www.softether.org"
+license=('Apache')
+depends=('openssl' 'libiconv' 'readline' 'ncurses')
+makedepends=('cmake' 'glibc')
+source=("https://github.com/SoftEtherVPN/SoftEtherVPN/releases/download/${pkgver}/SoftEtherVPN-${pkgver}.tar.xz"
+        'softether-vpnbridge.service'
+        'softether-vpnclient.service'
+	'softether-vpnserver.service'
+        'softether.conf')
+md5sums=('8b504c92cf835a55d5cadd5725bf79fb'
+         '0d29758901123a5cb409f9978b982609'
+         '45231429de1e46cc5c61f77f3ba970b6'
+         '89d83216f1627664e5c6fd04ad0e7412'
+         '3df30498dff4ec6b88db7a0967534cc7')
+
+build(){
+  cd "${srcdir}/SoftEtherVPN-${pkgver}"
+  ./configure
+  cmake . \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib \
+    -DCMAKE_INSTALL_SYSTEMD_UNITDIR=/usr/lib/systemd/system \
+    -DSE_PIDDIR=/run/${pkgname} \
+    -DSE_LOGDIR=/var/log/${pkgname} \
+    -DSE_DBDIR=/var/lib/${pkgname} \
+    -B build
+  make -C build
+}
+
+package(){
+  cd "${srcdir}/SoftEtherVPN-${pkgver}"
+  
+  make DESTDIR="${pkgdir}" -C build install
+  
+  install -Dm644 "${srcdir}/${pkgname}.conf" "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
+  install -Dm644 "${srcdir}"/*.service "${pkgdir}/usr/lib/systemd/system"
+}

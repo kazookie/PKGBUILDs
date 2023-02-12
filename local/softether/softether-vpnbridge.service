@@ -1,0 +1,18 @@
+[Unit]
+Description=SoftEther VPN Bridge
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/vpnbridge start
+ExecStop=/usr/bin/vpnbridge stop
+KillMode=process
+Restart=on-failure
+
+# Hardening
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
