@@ -5,7 +5,7 @@ pkgdesc="Multi-protocol VPN Program from University of Tsukuba"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://www.softether.org"
 license=('Apache')
-depends=('openssl' 'libiconv' 'readline' 'ncurses')
+depends=('openssl' 'libiconv' 'readline' 'ncurses' 'libsodium')
 makedepends=('cmake' 'glibc')
 source=("https://github.com/SoftEtherVPN/SoftEtherVPN/releases/download/${pkgver}/SoftEtherVPN-${pkgver}.tar.xz"
         'softether-vpnbridge.service'
